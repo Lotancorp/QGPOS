@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Web</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h1>POS Web</h1>
+            <form id="loginForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" placeholder="Enter your username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+                <button type="submit">Login</button>
+            </form>
+            <div id="errorMessage" class="error-message"></div>
+        </div>
+    </div>
+
+    <!-- POS Interface -->
+    <div class="pos-container" id="posContainer" style="display: none;">
+        <header>
+            <h1>POS System</h1>
+            <div class="user-info">
+                <span id="usernameDisplay">Welcome, User</span>
+                <button onclick="logout()">Logout</button>
+            </div>
+            <div id="dateTime"></div>
+        </header>
+
+        <main>
+            <section class="item-list">
+                <h2>Available Items</h2>
+                <input type="text" id="searchInput" placeholder="Search items...">
+                <div class="item-grid" id="itemGrid">
+                    <!-- Items will be dynamically generated -->
+                </div>
+            </section>
+
+            <section class="cart">
+                <h2>Cart</h2>
+                <div id="cartItems">
+                    <!-- Cart items will be dynamically added here -->
+                </div>
+                <div class="cart-summary">
+                    <p>Total: <span id="totalPrice">Rp0</span></p>
+                    <button onclick="checkout()">Checkout</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 POS Web</p>
+        </footer>
+    </div>
+</body>
+</html>
