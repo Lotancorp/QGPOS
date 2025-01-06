@@ -143,15 +143,23 @@ renderItems();
 function checkout() {
     document.getElementById('paymentModal').style.display = 'flex';
     const total = calculateTotal();
-    const tax = total * 0.11;
-    const grandTotal = total + tax;
+    const tax = total * 0.11; // Pajak 11%
+    const grandTotal = total + tax; // Total termasuk pajak
 
+    // Update Total dan Remaining Amount
     document.getElementById('totalAmount').textContent = `Total: Rp${grandTotal.toLocaleString()}`;
     document.getElementById('remainingAmount').textContent = `Rp${grandTotal.toLocaleString()}`;
-    document.getElementById('paidAmount').textContent = 'Rp0';
-    document.getElementById('paymentInput').value = '';
+    document.getElementById('paidAmount').textContent = 'Rp0'; // Reset jumlah pembayaran
+    document.getElementById('paymentInput').value = ''; // Kosongkan input pembayaran
+
+    // Kosongkan tabel pembayaran tetapi jangan tambahkan header tabel lebih dari satu kali
     const paymentDetails = document.getElementById('paymentDetails');
-    paymentDetails.innerHTML = '<tr><th>Description</th><th>Amount</th></tr>';
+    paymentDetails.innerHTML = ''; // Kosongkan isi tabel tanpa menambahkan header tabel
+    const headerRow = document.createElement('tr');
+    headerRow.innerHTML = `<th>Description</th><th>Amount</th>`;
+    paymentDetails.appendChild(headerRow);
+
+    // Tambahkan detail pajak
     document.getElementById('taxDetail').textContent = `Tax (11%): Rp${tax.toLocaleString()}`;
 }
 
@@ -410,13 +418,19 @@ function selectPayment(method) {
 
     // Cari baris pembayaran dengan metode yang sama
     const paymentDetails = document.getElementById('paymentDetails');
-    let existingRow = Array.from(paymentDetails.querySelectorAll('tr')).find(row => {
+    const rows = Array.from(paymentDetails.querySelectorAll('tr'));
+    let existingRow = null;
+
+    // Periksa apakah baris dengan metode pembayaran sudah ada
+    rows.forEach(row => {
         const cells = row.children;
-        return cells.length > 0 && cells[0].textContent === method;
+        if (cells.length > 0 && cells[0].textContent === method) {
+            existingRow = row;
+        }
     });
 
     if (existingRow) {
-        // Update jumlah pada baris yang sama
+        // Perbarui jumlah pada baris yang sudah ada
         const currentAmount = parseFloat(existingRow.children[1].textContent.replace('Rp', '').replace(/\./g, '').replace(/,/g, ''));
         existingRow.children[1].textContent = `Rp${(currentAmount + amount).toLocaleString()}`;
     } else {
@@ -434,36 +448,43 @@ function selectPayment(method) {
 }
 
 
-
 function updatePaymentSummary() {
     const total = calculateTotal(); // Hitung total subtotal
     const tax = total * 0.11; // Pajak 11%
     const grandTotal = total + tax; // Total termasuk pajak
 
     // Ambil daftar pembayaran dari tabel paymentDetails
-    const paymentRows = Array.from(document.getElementById('paymentDetails').querySelectorAll('tr')).slice(1); // Skip header row
-    let paid = 0;
+    const payments = Array.from(document.getElementById('paymentDetails').querySelectorAll('tr'))
+        .slice(1) // Skip header row
+        .map(row => parseFloat(row.children[1].textContent.replace('Rp', '').replace(/\./g, '').replace(/,/g, '')));
 
-    if (paymentRows.length > 0) {
-        // Hitung total pembayaran yang dilakukan
-        paid = paymentRows.reduce((sum, row) => {
-            const amount = parseFloat(row.children[1].textContent.replace('Rp', '').replace(/\./g, '').replace(/,/g, ''));
-            return sum + amount;
-        }, 0);
-    }
+    // Pastikan semua pembayaran dihitung
+    const paid = payments.length > 0 ? payments.reduce((sum, amount) => sum + amount, 0) : 0;
 
     // Hitung remaining balance
     const remaining = grandTotal - paid;
 
-    // Update teks Paid dan Remaining
+    // Update Paid Amount
     document.getElementById('paidAmount').textContent = `Rp${paid.toLocaleString()}`;
-    document.getElementById('remainingAmount').textContent = remaining >= 0
-        ? `Rp${remaining.toLocaleString()}`
-        : `Change: Rp${Math.abs(remaining).toLocaleString()}`;
+
+    // Update Remaining Amount (atau Change jika pembayaran lebih besar)
+    if (remaining > 0) {
+        document.getElementById('remainingAmount').textContent = `Rp${remaining.toLocaleString()}`;
+    } else {
+        document.getElementById('remainingAmount').textContent = `Change: Rp${remaining.toLocaleString()}`;
+    }
 
     // Tambahkan detail pajak
     document.getElementById('taxDetail').textContent = `Tax (11%): Rp${tax.toLocaleString()}`;
-}
+    console.log({
+        total,
+        tax,
+        grandTotal,
+        paid,
+        remaining,
+    });
+    
+}   
 
 
 
