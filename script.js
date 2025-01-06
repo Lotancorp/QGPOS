@@ -7,7 +7,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     const errorMessage = document.getElementById('errorMessage');
 
     // Simulated Login Validation
-    if (username === '1' && password === '1') {
+    if (username === '2' && password === '2') {
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('posContainer').style.display = 'flex';
         document.getElementById('usernameDisplay').textContent = `Welcome, ${username}`;
@@ -36,7 +36,14 @@ const items = [
     { id: 8, name: 'Onion Rings', price: 32000, img: 'https://via.placeholder.com/150' },
     { id: 9, name: 'Grilled Chicken', price: 79000, img: 'https://via.placeholder.com/150' },
     { id: 10, name: 'Fish Fillet', price: 67000, img: 'https://via.placeholder.com/150' },
+    { id: 11, name: 'Aqua 600ml', price: 5000, img: 'https://via.placeholder.com/150' },
+    { id: 12, name: 'Indomie Goreng', price: 3000, img: 'https://via.placeholder.com/150' },
+    { id: 13, name: 'Beng-Beng', price: 2500, img: 'https://via.placeholder.com/150' },
+    { id: 14, name: 'SilverQueen 62g', price: 13500, img: 'https://via.placeholder.com/150' },
+    { id: 15, name: 'Coca-Cola 330ml', price: 8500, img: 'https://via.placeholder.com/150' },
+    { id: 16, name: 'Roti Tawar Sari Roti', price: 15000, img: 'https://via.placeholder.com/150' }
 ];
+
 
 // Cart array to store items added to the cart
 const cart = [];
