@@ -18,6 +18,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 document.getElementById('paymentInput').addEventListener('input', function(event) {
     this.value = this.value.replace(/[^0-9.]/g, ''); // Hanya angka dan titik yang diizinkan
 });
+console.log('Header row added to paymentDetails:', paymentDetails.querySelectorAll('tr').length);
 
 function logout() {
     document.getElementById('posContainer').style.display = 'none';
@@ -162,6 +163,7 @@ function checkout() {
     // Tambahkan detail pajak
     document.getElementById('taxDetail').textContent = `Tax (11%): Rp${tax.toLocaleString()}`;
 }
+
 
 
 
@@ -446,6 +448,7 @@ function selectPayment(method) {
     // Update summary setelah menambahkan pembayaran
     updatePaymentSummary();
 }
+
 
 
 function updatePaymentSummary() {
