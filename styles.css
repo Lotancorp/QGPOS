@@ -127,8 +127,8 @@ main {
 
 .item-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsif dengan minimum lebar 150px */
-    gap: 20px; /* Jarak antar item */
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsif dengan minimum lebar 100px */
+    gap: 10px; /* Jarak antar item */
     margin: 20px;
 }
 
@@ -175,6 +175,10 @@ footer {
     color: white;
     text-align: center;
     padding: 10px;
+    position: fixed; /* Freeze footer at the bottom */
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 /* Responsive Design */
