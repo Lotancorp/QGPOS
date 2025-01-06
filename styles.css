@@ -3,18 +3,17 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    background-color: #f4f4f9;
+    background-color: #F8FBFD; /* Softest blue */
+    color: #1F2933; /* Dark blue-gray for text */
 }
 
 h1, h2 {
     margin: 0;
     padding: 10px 0;
-    color: #333;
 }
 
 button {
-    background-color: #007bff;
+    background-color: #5A7184; /* Medium blue-gray for buttons */
     color: white;
     border: none;
     padding: 10px 15px;
@@ -23,7 +22,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #394A59; /* Darker blue-gray for hover effect */
 }
 
 /* Login Styles */
@@ -33,7 +32,7 @@ button:hover {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #f4f4f9;
+    background-color: #E3E9ED; /* Soft muted blue-gray */
 }
 
 .login-box {
@@ -68,25 +67,54 @@ input[type="text"], input[type="password"] {
 }
 
 header {
-    background-color: #007bff;
+    background-color: #5A7184; /* Medium blue-gray for header */
     color: white;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: fixed; /* Keep the header fixed at the top */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Ensure it stays above other elements */
 }
 
-.user-info {
+.header-left {
+    flex: 1;
+    text-align: left;
+}
+
+.header-right {
+    flex: 1;
+    text-align: right;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+}
+
+.header-right span {
+    margin-right: 10px;
+}
+
+.header-right button {
+    background-color: #394A59; /* Darker button for Logout */
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.header-right button:hover {
+    background-color: #2A3844; /* Even darker hover effect */
 }
 
 main {
+    margin-top: 70px; /* Adjust to match the height of the fixed header */
     display: flex;
     flex: 1;
     padding: 20px;
     gap: 20px;
-    background-color: #e9ecef;
+    background-color: #F8FBFD; /* Softest blue background */
 }
 
 .item-list, .cart {
@@ -99,9 +127,42 @@ main {
 
 .item-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsif dengan minimum lebar 150px */
+    gap: 20px; /* Jarak antar item */
+    margin: 20px;
+}
+
+.item {
+    text-align: center;
+    border: 1px solid #ccc; /* Garis pembatas untuk setiap item */
+    border-radius: 8px; /* Membuat sudut sedikit melengkung */
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Efek bayangan */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animasi saat hover */
+}
+
+.item:hover {
+    transform: scale(1.05); /* Membesar sedikit saat dihover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.item img {
+    max-width: 100%; /* Gambar mengisi lebar penuh item */
+    border-radius: 8px; /* Gambar juga mengikuti bentuk kotak item */
+    margin-bottom: 10px;
+}
+
+.item h3 {
+    font-size: 16px; /* Ukuran judul item */
+    color: #1F2933; /* Warna teks yang gelap */
+    margin: 10px 0 5px; /* Memberikan jarak dengan teks lainnya */
+}
+
+.item p {
+    font-size: 14px;
+    color: #5A7184; /* Warna harga sedikit lebih lembut */
+    margin-bottom: 10px;
 }
 
 .cart-summary {
@@ -110,7 +171,7 @@ main {
 }
 
 footer {
-    background-color: #007bff;
+    background-color: #394A59; /* Dark blue-gray for footer */
     color: white;
     text-align: center;
     padding: 10px;
@@ -125,5 +186,14 @@ footer {
     .item-list, .cart {
         flex: none;
         margin-bottom: 20px;
+    }
+
+    header {
+        flex-direction: column; /* Stack elements vertically on smaller screens */
+        text-align: center;
+    }
+
+    .header-left, .header-right {
+        text-align: center;
     }
 }
