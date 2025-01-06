@@ -7,7 +7,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     const errorMessage = document.getElementById('errorMessage');
 
     // Simulated Login Validation
-    if (username === '2' && password === '2') {
+    if (username === '1' && password === '1') {
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('posContainer').style.display = 'flex';
         document.getElementById('usernameDisplay').textContent = `Welcome, ${username}`;
