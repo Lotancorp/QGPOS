@@ -32,90 +32,94 @@
                 <span id="usernameDisplay">Welcome, User</span>
                 <button onclick="logout()">Logout</button>
             </div>
-            <div id="dateTime"></div>
         </header>
 
         <main>
-            <section class="item-list">
-                <h2>Available Items</h2>
-                <input type="text" id="searchInput" placeholder="Search items...">
-                <div class="item-grid" id="itemGrid">
-                    <!-- Items will be dynamically generated -->
-                </div>
-            </section>
+            <!-- Dashboard -->
+            <div id="dashboard">
+                <h2>Dashboard</h2>
+                <button onclick="showInputForm()">Input Data</button>
+                <button onclick="showCart()">Keranjang</button>
+            </div>
 
-            <section class="cart">
+            <!-- Data Input Form -->
+            <div id="dataInputForm" style="display: none;">
+                <h2>Input Data</h2>
+                <form id="dataForm">
+                    <label for="itemName">Nama Barang:</label>
+                    <input type="text" id="itemName" placeholder="Masukkan nama barang" required>
+                    <label for="quantity">Kuantitas:</label>
+                    <input type="number" id="quantity" placeholder="Masukkan jumlah barang" required>
+                    <label for="price">Harga:</label>
+                    <input type="number" id="price" placeholder="Masukkan harga barang" required>
+                    <button type="submit">Submit</button>
+                </form>
+                <button onclick="backToDashboard()">Kembali ke Dashboard</button>
+                <p id="dataStatus"></p>
+            </div>
+
+            <!-- Keranjang -->
+            <div id="cartSection" style="display: none;">
                 <h2>Keranjang</h2>
                 <div id="cartItems">
                     <!-- Cart items will be dynamically added here -->
                 </div>
-                <div class="cart-summary">
-                    <p>Total: <span id="totalPrice">Rp0</span></p>
-                    <button class="cart-button" onclick="checkout()">Checkout</button>
-                </div>
-            </section>
-        <!-- Payment Modal -->
-        <div id="paymentModal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <h2>Receive Payment</h2>
-                <div class="customer-info">
-                    <label for="customerName">Customer Name:</label>
-                    <input type="text" id="customerName" placeholder="Enter customer name" />
-                </div>
-                
-                <p id="totalAmount">Total: Rp0</p>
+                <button onclick="backToDashboard()">Kembali ke Dashboard</button>
+            </div>
 
-                <!-- Keypad Input -->
-                <div class="keypad">
-                    <input type="text" id="paymentInput" readonly placeholder="Enter amount" />
-                    <div class="keypad-buttons">
-                        <button onclick="addToInput('1')">1</button>
-                        <button onclick="addToInput('2')">2</button>
-                        <button onclick="addToInput('3')">3</button>
-                        <button onclick="addToInput('4')">4</button>
-                        <button onclick="addToInput('5')">5</button>
-                        <button onclick="addToInput('6')">6</button>
-                        <button onclick="addToInput('7')">7</button>
-                        <button onclick="addToInput('8')">8</button>
-                        <button onclick="addToInput('9')">9</button>
-                        <button onclick="clearInput()">CLEAR</button>
-                        <button onclick="addToInput('0')">0</button>
-                        <button onclick="addToInput('.')">.</button>
+            <!-- Payment Modal -->
+            <div id="paymentModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>Receive Payment</h2>
+                    <div class="customer-info">
+                        <label for="customerName">Customer Name:</label>
+                        <input type="text" id="customerName" placeholder="Enter customer name">
+                    </div>
+                    <p id="totalAmount">Total: Rp0</p>
+                    <!-- Keypad Input -->
+                    <div class="keypad">
+                        <input type="text" id="paymentInput" readonly placeholder="Enter amount">
+                        <div class="keypad-buttons">
+                            <button onclick="addToInput('1')">1</button>
+                            <button onclick="addToInput('2')">2</button>
+                            <button onclick="addToInput('3')">3</button>
+                            <button onclick="addToInput('4')">4</button>
+                            <button onclick="addToInput('5')">5</button>
+                            <button onclick="addToInput('6')">6</button>
+                            <button onclick="addToInput('7')">7</button>
+                            <button onclick="addToInput('8')">8</button>
+                            <button onclick="addToInput('9')">9</button>
+                            <button onclick="clearInput()">CLEAR</button>
+                            <button onclick="addToInput('0')">0</button>
+                            <button onclick="addToInput('.')">.</button>
+                        </div>
+                    </div>
+                    <!-- Payment Options -->
+                    <div class="payment-options">
+                        <button onclick="selectPayment('Cash')">Cash</button>
+                        <button onclick="selectPayment('QR')">QR</button>
+                        <button onclick="selectPayment('Card')">Card (Debit/CC)</button>
+                    </div>
+                    <!-- Payment Details -->
+                    <div class="payment-details">
+                        <table>
+                            <tbody id="paymentDetails">
+                                <!-- Payment rows will be added dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="payment-summary">
+                        <p>Paid: <span id="paidAmount">Rp0</span></p>
+                        <p id="taxDetail"></p>
+                        <p>Total: <span id="remainingAmount">Rp0</span></p>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="proceed-button" onclick="proceedWithValidation()">Proceed</button>
+                        <button class="cancel-button" onclick="closeModal()">Cancel</button>
+                        <button class="proceed-button" onclick="generateInvoice()">Invoice</button>
                     </div>
                 </div>
-
-                <!-- Payment Options -->
-                <div class="payment-options">
-                    <button onclick="selectPayment('Cash')">Cash</button>
-                    <button onclick="selectPayment('QR')">QR</button>
-                    <button onclick="selectPayment('Card')">Card (Debit/CC)</button>
-                </div>
-
-                <!-- Payment Details -->
-                <div class="payment-details">
-                    <table>
-                        <tbody id="paymentDetails">
-                            <!-- Payment rows will be added dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="payment-summary">
-                    <p>Paid: <span id="paidAmount">Rp0</span></p>
-                    <p id="taxDetail"></p>
-                    <p>Total: <span id="remainingAmount">Rp0</span></p>
-                </div>
-
-                <div class="modal-actions">
-                    <button class="proceed-button" onclick="proceedWithValidation()">Proceed</button>
-                    <button class="cancel-button" onclick="closeModal()">Cancel</button>
-                    <button class="proceed-button" onclick="generateInvoice2()">Invoice</button>
-                </div>
-                
             </div>
-        </div>
-
-
         </main>
 
         <footer>

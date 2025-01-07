@@ -1,20 +1,80 @@
-// JavaScript Code for POS Web
-document.getElementById('loginForm').addEventListener('submit', function(event) {
+// Login Validation
+document.getElementById('loginForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const errorMessage = document.getElementById('errorMessage');
 
-    // Simulated Login Validation
-    if (username === '1' && password === '1') {
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('posContainer').style.display = 'flex';
-        document.getElementById('usernameDisplay').textContent = `Welcome, ${username}`;
-    } else {
-        errorMessage.textContent = 'Invalid username or password';
+    const spreadsheetId = "1nCBWIy2w66myJUpLHsew189-Ue7FITSTxwMRz-335BQ";
+    const apiKey = "AIzaSyDObZlN1jDkIySkgePI-6InKCOGOnxc8bs"; // Ganti dengan API Key Anda
+    const sheetName = "Users";
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        // Parse rows to find matching username and password
+        const rows = data.values || [];
+        const isValid = rows.some(row => row[0] === username && row[1] === password);
+
+        if (isValid) {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dataInputForm').style.display = 'block';
+        } else {
+            errorMessage.textContent = 'Username atau password salah.';
+        }
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        errorMessage.textContent = 'Terjadi kesalahan pada login.';
     }
 });
+
+// Data Input
+document.getElementById('dataForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const itemName = document.getElementById('itemName').value;
+    const quantity = document.getElementById('quantity').value;
+    const price = document.getElementById('price').value;
+    const dataStatus = document.getElementById('dataStatus');
+
+    // Data to append
+    const values = [[itemName, quantity, price]];
+
+    // Append API URL
+    const sheetName = "DataBarang"; // Worksheet untuk input data
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}:append?valueInputOption=USER_ENTERED&key=${apiKey}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                range: sheetName,
+                majorDimension: "ROWS",
+                values: values,
+            }),
+        });
+
+        if (response.ok) {
+            dataStatus.textContent = "Data berhasil ditambahkan!";
+            dataStatus.style.color = "green";
+            document.getElementById('dataForm').reset();
+        } else {
+            throw new Error("Gagal menambahkan data.");
+        }
+    } catch (error) {
+        console.error("Error adding data:", error);
+        dataStatus.textContent = "Terjadi kesalahan saat menambahkan data.";
+        dataStatus.style.color = "red";
+    }
+});
+
+
 document.getElementById('paymentInput').addEventListener('input', function(event) {
     this.value = this.value.replace(/[^0-9.]/g, ''); // Hanya angka dan titik yang diizinkan
 });
@@ -47,11 +107,8 @@ const items = [
     { id: 15, name: 'Coca-Cola 330ml', price: 8500, img: 'https://via.placeholder.com/150' },
     { id: 16, name: 'Roti Tawar Sari Roti', price: 15000, img: 'https://via.placeholder.com/150' }
 ];
-
-
 // Cart array to store items added to the cart
 const cart = [];
-
 // Render items to the grid
 function renderItems() {
     const itemGrid = document.getElementById('itemGrid');
@@ -73,7 +130,6 @@ function renderItems() {
         itemGrid.appendChild(itemDiv);
     });
 }
-
 // Add item to the cart
 function addToCart(itemId) {
     const item = items.find(i => i.id === itemId);
@@ -88,8 +144,6 @@ function addToCart(itemId) {
 
     renderCart(); // Perbarui tampilan cart
 }
-
-
 // Render cart items and calculate total price
 function renderCart() {
     const cartItems = document.getElementById('cartItems');
@@ -119,8 +173,6 @@ function renderCart() {
 
     totalPrice.textContent = `Rp${total.toLocaleString()}`;
 }
-
-
 // Update quantity function
 function updateQuantity(index, delta) {
     if (cart[index].quantity + delta > 0) {
@@ -134,13 +186,8 @@ function removeItem(index) {
     cart.splice(index, 1); // Hapus item dari cart
     renderCart(); // Perbarui tampilan cart
 }
-
-
-
 // Initial rendering of items
 renderItems();
-
-
 function checkout() {
     document.getElementById('paymentModal').style.display = 'flex';
     const total = calculateTotal();
@@ -164,24 +211,17 @@ function checkout() {
     document.getElementById('taxDetail').textContent = `Tax (11%): Rp${tax.toLocaleString()}`;
 }
 
-
-
-
-
 function closeModal() {
     document.getElementById('paymentModal').style.display = 'none';
 }
-
 function addToInput(value) {
     const input = document.getElementById('paymentInput');
     input.value += value;
 }
-
 function clearInput() {
     const input = document.getElementById('paymentInput');
     input.value = '';
 }
-
 function generateInvoice() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -244,7 +284,6 @@ function generateInvoice() {
     doc.save("invoice.pdf");
 }
 
-
 function proceedWithValidation() {
     const remainingText = document.getElementById('remainingAmount').textContent;
     const remaining = parseFloat(remainingText.replace('Rp', '').replace('Change:', '').replace(/\./g, '').replace(/,/g, ''));
@@ -256,8 +295,6 @@ function proceedWithValidation() {
 
     generateInvoice(); // Generate invoice jika validasi lolos
 }
-
-
 
 function generateInvoice() {
     const { jsPDF } = window.jspdf;
@@ -346,7 +383,6 @@ function generateInvoice() {
     // Save PDF
     doc.save("invoice.pdf");
 }
-
 function generateInvoice2() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -408,7 +444,6 @@ function generateInvoice2() {
     // Save PDF
     doc.save("invoice.pdf");
 }
-
 function selectPayment(method) {
     const input = document.getElementById('paymentInput');
     const amount = parseFloat(input.value || 0);
@@ -449,8 +484,6 @@ function selectPayment(method) {
     updatePaymentSummary();
 }
 
-
-
 function updatePaymentSummary() {
     const total = calculateTotal(); // Hitung total subtotal
     const tax = total * 0.11; // Pajak 11%
@@ -488,9 +521,6 @@ function updatePaymentSummary() {
     });
     
 }   
-
-
-
 
 function calculateTotal() {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
